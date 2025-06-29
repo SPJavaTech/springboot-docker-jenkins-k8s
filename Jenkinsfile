@@ -1,12 +1,8 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9-eclipse-temurin-21-alpine'
-        }
-    }
+    agent any
 
     environment {
-        IMAGE_NAME = 'dockerjenkinsk8s' // safe name (no special chars)
+        IMAGE_NAME = 'dockerjenkinsk8s'
     }
 
     stages {
