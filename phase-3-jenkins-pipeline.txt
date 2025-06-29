@@ -8,6 +8,11 @@ cmd> docker exec -it jenkins bash
 		apt-get update
 		apt-get install -y docker.io
 		docker --version
+		
+		apt-get update
+        apt-get install -y maven
+        mvn -v
+
 
 📍Access it at http://localhost:8081
 
