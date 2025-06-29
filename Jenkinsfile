@@ -1,8 +1,12 @@
 pipeline {
     agent {
-            docker {
-                image 'maven:3.8.8-eclipse-temurin:21-jdk-alpine'
-            }
+        docker {
+            image 'maven:3.9-eclipse-temurin-21-alpine'
+        }
+    }
+
+    environment {
+        IMAGE_NAME = 'dockerjenkinsk8s' // safe name (no special chars)
     }
 
     stages {
@@ -20,13 +24,14 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t docker-jenkin-k8s .'
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
         stage('Run Docker Image') {
             steps {
-                sh 'docker run -d -p 8080:8080 docker-jenkin-k8s'
+                sh "docker rm -f ${IMAGE_NAME} || true"
+                sh "docker run -d -p 8080:8080 --name ${IMAGE_NAME} ${IMAGE_NAME}"
             }
         }
     }
