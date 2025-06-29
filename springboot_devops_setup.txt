@@ -1,0 +1,216 @@
+# ✅ Full Spring Boot + Maven + Docker + Jenkins + Kubernetes (Minikube) on Windows
+
+This guide walks you through setting up everything locally:
+- Simple Spring Boot API
+- Build with Maven
+- Dockerize it
+- Automate with Jenkins
+- Deploy on Minikube (Kubernetes)
+
+---
+
+## 🛠️ 1. Install & Verify Prerequisites (on Windows)
+
+### 🔹 1.1 Install Java 17
+- Download: https://adoptium.net/
+- Verify:
+```bash
+java -version
+```
+
+### 🔹 1.2 Install Maven
+- Download: https://maven.apache.org/download.cgi
+- Add to `PATH`
+- Verify:
+```bash
+mvn -version
+```
+
+### 🔹 1.3 Install Docker Desktop
+- Download: https://www.docker.com/products/docker-desktop/
+- Enable **WSL2 integration** and **Kubernetes** during setup.
+- Verify:
+```bash
+docker --version
+docker info
+```
+
+### 🔹 1.4 Install Jenkins (with Docker)
+```bash
+docker run -d -p 8081:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --name jenkins \
+  jenkins/jenkins:lts
+```
+- Visit `http://localhost:8081`
+- Unlock with the initial password (see logs):
+```bash
+docker logs jenkins | more
+```
+
+### 🔹 1.5 Install Minikube
+- Download installer: https://minikube.sigs.k8s.io/docs/start/
+- Enable Docker driver:
+```bash
+minikube config set driver docker
+```
+- Start cluster:
+```bash
+minikube start
+```
+- Verify:
+```bash
+kubectl get nodes
+```
+
+✅ At this point: Jenkins is up, Minikube is running, and Docker is ready.
+
+---
+
+## 🧱 2. Spring Boot Project (Hello API)
+
+### 🔹 `DemoApplication.java`
+```java
+@RestController
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello from Spring Boot!";
+    }
+}
+```
+
+### 🔹 `pom.xml`
+Make sure it has the `spring-boot-maven-plugin`:
+```xml
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+    </plugin>
+  </plugins>
+</build>
+```
+
+Build:
+```bash
+mvn clean package
+```
+
+---
+
+## 🐳 3. Dockerfile
+```dockerfile
+FROM eclipse-temurin:17-jdk-alpine
+COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+Build & run locally:
+```bash
+docker build -t springboot-demo .
+docker run -p 8080:8080 springboot-demo
+```
+Visit `http://localhost:8080/hello`
+
+---
+
+## 🤖 4. Jenkinsfile (CI Pipeline)
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t springboot-demo .'
+            }
+        }
+    }
+}
+```
+
+- Create a **Pipeline** job in Jenkins
+- Paste the Jenkinsfile from Git repo or directly
+
+---
+
+## ☸️ 5. Kubernetes YAML (Minikube)
+
+### 🔹 `deployment.yaml`
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot
+  template:
+    metadata:
+      labels:
+        app: springboot
+    spec:
+      containers:
+        - name: springboot
+          image: springboot-demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+```
+
+### 🔹 `service.yaml`
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-service
+spec:
+  type: NodePort
+  selector:
+    app: springboot
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30080
+```
+
+---
+
+## 🚀 6. Deploy to Kubernetes (Minikube)
+```bash
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+```
+Access your app:
+```bash
+minikube service springboot-service --url
+```
+
+---
+
+## ✅ Summary
+
+| Step         | Tool          | Purpose                            |
+|--------------|---------------|------------------------------------|
+| 1            | Java, Maven   | Spring Boot build system           |
+| 2            | Docker        | Containerize your app              |
+| 3            | Jenkins       | Automate build and image creation  |
+| 4            | Minikube      | Local Kubernetes cluster           |
+| 5            | kubectl       | Deploy YAML files to cluster       |
+
+You now have an end-to-end working setup locally. Once you’re comfortable, we can add CI/CD and move to AWS EKS.
+
+Let me know if you want this as a GitHub repo or ZIP file version to try out!
