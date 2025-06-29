@@ -36,13 +36,8 @@ docker info
 ```
 
 ### 🔹 1.4 Install Jenkins (with Docker)
-```bash
-docker run -d -p 8081:8080 -p 50000:50000 \
-  -v jenkins_home:/var/jenkins_home \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  --name jenkins \
-  jenkins/jenkins:lts
-```
+docker run -d -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v //var/run/docker.sock:/var/run/docker.sock --name jenkins jenkins/jenkins:lts
+
 - Visit `http://localhost:8081`
 - Unlock with the initial password (see logs):
 ```bash
@@ -212,3 +207,21 @@ minikube service springboot-service --url
 You now have an end-to-end working setup locally. Once you’re comfortable, we can add CI/CD and move to AWS EKS.
 
 Let me know if you want this as a GitHub repo or ZIP file version to try out!
+Git Branch Naming Convention for DevOps Learning
+Branch Name	Purpose
+phase-1-initial-setup	Spring Boot app + Maven build only
+phase-2-dockerization	Add Dockerfile + run app in a container
+phase-3-jenkins-pipeline	Jenkins setup + CI for Maven & Docker image
+phase-4-k8s-basic-deployment	Kubernetes Deployment + Service YAML + Minikube deploy
+phase-5-k8s-autoscaling	Horizontal Pod Autoscaler (HPA) added
+phase-6-k8s-config-secrets	Externalize config via ConfigMap + Secret
+phase-7-helm-charts	Helm chart setup for reusable Kubernetes deployments
+phase-8-jenkins-cicd-k8s	Jenkins CI/CD: Full pipeline from code → Docker → K8s
+phase-9-docker-jenkins-advanced	Multi-stage Docker + Jenkins shared libs & credentials
+phase-10-cloud-migration	Optional: Migrate setup to EKS/AKS + Ingress + GitOps
+Microservices Phase Plan (after Phase 5)
+Phase	Branch Name	Focus
+Phase 6 (A)	phase-6a-split-into-microservices	Convert monolith into 2 Spring Boot services (e.g., Employee + Department)
+Phase 6 (B)	phase-6b-dockerize-microservices	Dockerize both services, run with Docker Compose
+Phase 7 (Alt)	phase-7-k8s-microservices	Deploy both services to Kubernetes with communication via service names
+Phase 8 (Alt)	phase-8-api-gateway-and-ingress	Add API gateway (Spring Cloud Gateway or Ingress) for routing and scaling

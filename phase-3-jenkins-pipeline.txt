@@ -1,0 +1,90 @@
+Jenkins Setup (Phase 3)
+✅ Step 1: Start Jenkins (Docker-based)
+Run Jenkins container:
+
+cmd>docker run -d -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v //var/run/docker.sock:/var/run/docker.sock --name jenkins jenkins/jenkins:lts
+
+📍Access it at http://localhost:8081
+
+✅ Step 2: Initial Jenkins Setup
+Unlock Jenkins using this:
+
+cmd>docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+Install Suggested Plugins
+
+Create Admin user
+ UserName: admin
+ Password: admin
+
+✅ Step 3: Install Needed Plugins
+In Manage Jenkins → Plugin Manager, install:
+
+Git
+
+Docker Pipeline
+
+Pipeline
+
+✅ Step 4: Create Jenkins Pipeline Job
+Go to Jenkins Dashboard → New Item
+
+Choose Pipeline, name it: springboot-docker-ci
+
+In Pipeline script, choose:
+
+Either: “Pipeline script from SCM” if pulling Jenkinsfile from your GitHub repo
+
+Or paste this below Jenkinsfile directly
+
+🧾 Jenkinsfile (Minimal for Phase 3)
+Create a file named Jenkinsfile in your project root:
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'phase-3-jenkins-pipeline', url: 'https://github.com/<your-username>/<repo-name>.git'
+            }
+        }
+
+        stage('Build JAR') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t docker-jenkin-k8s .'
+            }
+        }
+
+        stage('Run Docker Image') {
+            steps {
+                sh 'docker run -d -p 8080:8080 docker-jenkin-k8s'
+            }
+        }
+    }
+}
+💡 You can comment out run stage initially if you only want to build.
+==========
+ How to Configure in Jenkins (Pipeline from SCM)
+Go to Dashboard Jenkins → New Item → Create a Pipeline Job
+
+Choose:
+
+Pipeline script from SCM
+
+Set values like this:
+
+Field	Value
+SCM	Git
+Repository URL	https://github.com/your-username/your-repo.git
+Branch	*/phase-3-jenkins-pipeline
+Script Path	Jenkinsfile
+==========
+
+✅ Step 5: Run Your Pipeline
+Click Build Now → You should see your Jenkins pipeline compile code, build Docker image, and optionally run it.
