@@ -1,12 +1,11 @@
 pipeline {
-    agent any
-
-    stages {
-      agent {
+    agent {
             docker {
                 image 'maven:3.8.8-eclipse-temurin:21-jdk-alpine'
             }
-        }
+    }
+
+    stages {
         stage('Checkout') {
             steps {
                 git branch: 'phase-3-jenkins-pipeline', url: 'https://github.com/SPJavaTech/springboot-docker-jenkins-k8s.git'
