@@ -88,3 +88,44 @@ Script Path	Jenkinsfile
 
 ✅ Step 5: Run Your Pipeline
 Click Build Now → You should see your Jenkins pipeline compile code, build Docker image, and optionally run it.
+
+Run Your Jenkins Pipeline
+In Jenkins:
+
+Go to your pipeline job
+
+Click “Build Now”
+
+This will:
+
+Pull code from your phase-3-jenkins-pipeline branch
+
+Run the mvn clean package
+
+Build the Docker image (docker build)
+
+Run the Docker container (docker run)
+
+✅ If everything is correct, Jenkins will show a green ✅ build status.
+
+🔎 3. Verify Container is Running
+After successful build:
+
+docker ps
+You should see something like:
+nginx
+
+CONTAINER ID   IMAGE              PORTS                  NAMES
+abc123         docker-jenkin-k8s  0.0.0.0:8080->8080/tcp my-running-container
+Now, open:
+
+http://localhost:8080/hello
+📘 Optional Tips
+🧼 If you want Jenkins to remove old containers first:
+Add this stage before docker run:
+
+stage('Clean old container') {
+    steps {
+        sh 'docker rm -f docker-jenkin-k8s || true'
+    }
+}
