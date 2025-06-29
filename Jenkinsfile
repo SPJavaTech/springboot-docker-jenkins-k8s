@@ -6,12 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'phase-3-jenkins-pipeline', url: 'https://github.com/SPJavaTech/springboot-docker-jenkins-k8s.git'
-            }
-        }
-
         stage('Build JAR') {
             steps {
                 sh 'mvn clean package'
@@ -24,7 +18,7 @@ pipeline {
             }
         }
 
-        stage('Run Docker Image') {
+        stage('Run Docker Container') {
             steps {
                 sh "docker rm -f ${IMAGE_NAME} || true"
                 sh "docker run -d -p 8080:8080 --name ${IMAGE_NAME} ${IMAGE_NAME}"

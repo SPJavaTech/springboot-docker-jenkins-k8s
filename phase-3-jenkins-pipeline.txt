@@ -2,7 +2,12 @@ Jenkins Setup (Phase 3)
 ✅ Step 1: Start Jenkins (Docker-based)
 Run Jenkins container:
 
-cmd>docker run -d -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v //var/run/docker.sock:/var/run/docker.sock --name jenkins jenkins/jenkins:lts
+cmd>docker run -d -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v //var/run/docker.sock:/var/run/docker.sock --name jenkins --user root jenkins/jenkins:lts
+cmd> docker exec -it jenkins bash
+   Then install Docker CLI:
+		apt-get update
+		apt-get install -y docker.io
+		docker --version
 
 📍Access it at http://localhost:8081
 
