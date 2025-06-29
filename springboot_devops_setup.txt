@@ -106,16 +106,14 @@ mvn clean package
 ---
 
 ## 🐳 3. Dockerfile
-```dockerfile
-FROM eclipse-temurin:17-jdk-alpine
-COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
+FROM eclipse-temurin:21-jdk-alpine
+COPY target/devops-1.0.1.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
-```
+
 Build & run locally:
-```bash
-docker build -t springboot-demo .
-docker run -p 8080:8080 springboot-demo
-```
+
+> docker build -t docker-jenkin-k8s .
+> docker run -p 8080:8080 docker-jenkin-k8s
 Visit `http://localhost:8080/hello`
 
 ---
