@@ -9,7 +9,7 @@ public class DevopsController {
 
     @GetMapping("/message")
     public ResponseEntity<String> message() {
-        return ResponseEntity.ok("Hello World");
+        return ResponseEntity.ok("Application where jenkin build is running which package jar + build docker image + run docker application.");
     }
 
 }
