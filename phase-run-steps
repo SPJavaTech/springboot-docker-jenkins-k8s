@@ -1,5 +1,5 @@
 *****************************************************************************************************************************
-Application run steps for phase-4-k8s-basic-deployment START
+phase-4-k8s-basic-deployment  - Application run steps for START
 You now have a solid base in:
 ✅ Spring Boot app packaging
 ✅ Dockerization
@@ -90,6 +90,17 @@ cmd>docker run -d -p 8081:8080 -p 50000:50000 \
 
    Click "Build Now" to trigger your CI/CD.
 -----------------
+*****************************************************************************************************************************
+Application run steps for phase-4-k8s-basic-deployment END
+*****************************************************************************************************************************
+*****************************************************************************************************************************
+phase-5-k8s-configmap-secrets-volumes Application run steps START
+*****************************************************************************************************************************
+Same run steps as per above phase-4-k8s-basic-deployment , just check files added in k8s/ for the purpose of this work.
+  kubectl apply -f k8s/configmap.yaml
+  kubectl apply -f k8s/secret.yaml
+  kubectl apply -f k8s/k8s-deployment.yaml
+  kubectl apply -f k8s/k8s-service.yaml
 *****************************************************************************************************************************
 Application run steps for phase-4-k8s-basic-deployment END
 *****************************************************************************************************************************
