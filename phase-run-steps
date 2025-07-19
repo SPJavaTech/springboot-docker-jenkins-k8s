@@ -58,29 +58,19 @@ Where your Dockerfile, Jenkinsfile, and k8s-deployment.yaml files exist.
 Note to execute build from Jenkin UI
    Start Jenkins Container
    If you already created the Jenkins container earlier with:
-
-   bash
-   Copy
-   Edit
-   docker run -d -p 8081:8080 -p 50000:50000 \
+cmd>docker run -d -p 8081:8080 -p 50000:50000 \
      -v jenkins_home:/var/jenkins_home \
      -v //var/run/docker.sock:/var/run/docker.sock \
      --name jenkins jenkins/jenkins:lts
+
    Then just start the container again if it's stopped:
 
-   bash
-   Copy
-   Edit
-   docker start jenkins
+   cmd>docker start jenkins
    ✅ 3. Access Jenkins UI in Browser
    Open browser and visit:
-
-   arduino
-   Copy
-   Edit
-   http://localhost:8081
+         http://localhost:8081
    ✅ 4. Login to Jenkins
-   If it's the first time, Jenkins will ask for an admin password.
+         If it's the first time, Jenkins will ask for an admin password.
 
    To get the admin password:
    bash

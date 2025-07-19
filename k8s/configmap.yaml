@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: springboot-config
+data:
+  application.properties: |
+    server.port=8080
+    app.message="ConfigMap: This message is coming from K8s ConfigMap"
