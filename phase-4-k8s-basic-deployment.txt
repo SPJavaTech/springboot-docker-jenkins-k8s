@@ -81,7 +81,7 @@ Set Docker to Minikube's environment:
 
 	PS D:\SPTechZone\springboot-docker-jenkins-k8s> & minikube -p minikube docker-env | Invoke-Expression
 	
-	Re-run your Jenkins build (this builds the Docker image inside Minikube’s Docker)
+	Re-run your Jenkins build from Jenkins UI (this builds the Docker image inside Minikube’s Docker)
 	OR
 	PS D:\SPTechZone\springboot-docker-jenkins-k8s> docker build -t dockerjenkinsk8s:latest .
 

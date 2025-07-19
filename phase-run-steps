@@ -1,5 +1,10 @@
 *****************************************************************************************************************************
 Application run steps for phase-4-k8s-basic-deployment START
+You now have a solid base in:
+✅ Spring Boot app packaging
+✅ Dockerization
+✅ Jenkins CI pipeline
+✅ Kubernetes (Minikube) deployment
 *****************************************************************************************************************************
 1. Open Docker desktop
   Check Three container should be there

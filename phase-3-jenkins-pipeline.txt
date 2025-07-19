@@ -2,47 +2,39 @@ Jenkins Setup (Phase 3)
 ✅ Step 1: Start Jenkins (Docker-based)
 Run Jenkins container:
 
-cmd>docker run -d -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v //var/run/docker.sock:/var/run/docker.sock --name jenkins --user root jenkins/jenkins:lts
+cmd> docker run -d -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v //var/run/docker.sock:/var/run/docker.sock --name jenkins --user root jenkins/jenkins:lts
 cmd> docker exec -it jenkins bash
    Then install Docker CLI:
-		apt-get update
-		apt-get install -y docker.io
-		docker --version
+		bash> apt-get update
+		bash> apt-get install -y docker.io
+		bash> docker --version
 		
-		apt-get update
-        apt-get install -y maven
-        mvn -v
-
+		bash> apt-get update
+        bash> apt-get install -y maven
+        bash> mvn -v
 
 📍Access it at http://localhost:8081
 
 ✅ Step 2: Initial Jenkins Setup
-Unlock Jenkins using this:
+    get password using below command and do login into jenkin
+    cmd>docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
-cmd>docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
-Install Suggested Plugins
-
-Create Admin user
- UserName: admin
- Password: admin
+    - Create Admin user
+         UserName: admin
+         Password: admin
 
 ✅ Step 3: Install Needed Plugins
-In Manage Jenkins → Plugin Manager, install:
-
-Git
-
-Docker Pipeline
-
-Pipeline
+    In Manage Jenkins → Plugin Manager, install:
+        - Git
+        - Docker Pipeline
+        - Pipeline
 
 ✅ Step 4: Create Jenkins Pipeline Job
-Go to Jenkins Dashboard → New Item
-
-Choose Pipeline, name it: springboot-docker-ci
+       Go to Jenkins Dashboard → New Item
+            Choose Pipeline, name it: springboot-docker-ci
 
 In Pipeline script, choose:
-
-Either: “Pipeline script from SCM” if pulling Jenkinsfile from your GitHub repo
+    Either: “Pipeline script from SCM” if pulling Jenkinsfile from your GitHub repo (file is exist in project root dir)
 
 Or paste this below Jenkinsfile directly
 
@@ -79,51 +71,40 @@ pipeline {
     }
 }
 💡 You can comment out run stage initially if you only want to build.
-==========
+==================================================
  How to Configure in Jenkins (Pipeline from SCM)
 Go to Dashboard Jenkins → New Item → Create a Pipeline Job
-
 Choose:
-
-Pipeline script from SCM
-
+    - Pipeline script from SCM
 Set values like this:
-
-Field	Value
-SCM	Git
-Repository URL	https://github.com/your-username/your-repo.git
-Branch	*/phase-3-jenkins-pipeline
-Script Path	Jenkinsfile
-==========
+    Field	Value
+    - SCM as	Git
+    - Repository URL as  https://github.com/your-username/your-repo.git
+    - Branch as 	*/phase-3-jenkins-pipeline
+    - Script Path as Jenkinsfile
+==================================================
 
 ✅ Step 5: Run Your Pipeline
 Click Build Now → You should see your Jenkins pipeline compile code, build Docker image, and optionally run it.
-
-Run Your Jenkins Pipeline
+    Run Your Jenkins Pipeline
 In Jenkins:
-
-Go to your pipeline job
-
-Click “Build Now”
+    - Go to your pipeline job
+    - Click “Build Now”
 
 This will:
 
 Pull code from your phase-3-jenkins-pipeline branch
-
-Run the mvn clean package
-
-Build the Docker image (docker build)
-
-Run the Docker container (docker run)
+    - Run the mvn clean package
+    - Build the Docker image (docker build)
+    - Run the Docker container (docker run)
 
 ✅ If everything is correct, Jenkins will show a green ✅ build status.
 
 🔎 3. Verify Container is Running
 After successful build:
-
-docker ps
+    - docker ps
 You should see something like:
-nginx
+    - nginx
 
 CONTAINER ID   IMAGE              PORTS                  NAMES
 abc123         docker-jenkin-k8s  0.0.0.0:8080->8080/tcp my-running-container
