@@ -10,6 +10,9 @@ Set up Minikube in Windows
 	 edit environment System variable path and add ->  C:\minikube -> OK 
  
 	 cmd>minikube version
+	 
+	 minikube version: v1.36.0
+
 
 Set up kubectl on windows
    https://kubernetes.io/releases/download/#binaries
@@ -17,6 +20,7 @@ Set up kubectl on windows
   edit environment System variable path and add ->  C:\kubectl -> OK 
    
    C:\Users\DELL>kubectl version --client
+   Client Version: v1.30.5
 -------------------------------------------------------------------------------------- 
 
 ✅ 2. Start Minikube

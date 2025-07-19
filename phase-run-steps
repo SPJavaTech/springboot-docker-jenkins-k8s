@@ -1,0 +1,100 @@
+*****************************************************************************************************************************
+Application run steps for phase-4-k8s-basic-deployment START
+*****************************************************************************************************************************
+1. Open Docker desktop
+  Check Three container should be there
+     - dockerjenkinsk8s 8080:8080
+     - minikube (for Kubernetes)
+     - jenkins 50000:50000
+               8081:8080
+
+Open your terminal in project root
+Where your Dockerfile, Jenkinsfile, and k8s-deployment.yaml files exist.
+
+2. first check minikube and kubctl
+    D:\SPTechZone\springboot-docker-jenkins-k8s> minikube version
+    D:\SPTechZone\springboot-docker-jenkins-k8s> kubectl version --client
+
+    if minikube is not running then execute
+    Start Minikube
+    D:\SPTechZone\springboot-docker-jenkins-k8s> minikube start --driver=docker
+    ✅ 3. Confirm it's running
+    D:\SPTechZone\springboot-docker-jenkins-k8s> kubectl get nodes
+    D:\SPTechZone\springboot-docker-jenkins-k8s> kubectl cluster-info
+
+3. Start Minikube and connect Docker to Minikube
+   D:\SPTechZone\springboot-docker-jenkins-k8s> & minikube -p minikube docker-env | Invoke-Expression
+    <This ensures Docker builds the image inside Minikube’s Docker>
+
+4. Run Jenkins Job (If your Jenkins is already setup, trigger your pipeline job via Jenkins UI.)
+    Re-run your Jenkins build from Jenkins UI (this builds the Docker image inside Minikube’s Docker)
+  	OR
+  	PS D:\SPTechZone\springboot-docker-jenkins-k8s> docker build -t dockerjenkinsk8s:latest .
+
+5.  Apply K8s Deployment & Service
+    PS D:\SPTechZone\springboot-docker-jenkins-k8s> kubectl apply -f k8s-deployment.yaml
+    PS D:\SPTechZone\springboot-docker-jenkins-k8s> kubectl apply -f k8s-service.yaml
+    Wait a few seconds...
+
+6. Verify K8s pods and services
+   D:\SPTechZone\springboot-docker-jenkins-k8s> kubectl get pods
+   D:\SPTechZone\springboot-docker-jenkins-k8s> kubectl get svc
+   <Ensure springboot-app pod status is Running.>
+
+7. Expose service via Minikube
+   D:\SPTechZone\springboot-docker-jenkins-k8s> minikube service springboot-service --url
+   http://127.0.0.1:51861
+    in Browser access -> http://127.0.0.1:51861/message
+
+8.  Optional Cleanup (Before restarting)
+   D:\SPTechZone\springboot-docker-jenkins-k8s> kubectl delete -f k8s-deployment.yaml
+   D:\SPTechZone\springboot-docker-jenkins-k8s> kubectl delete -f k8s-service.yaml
+--------
+Note to execute build from Jenkin UI
+   Start Jenkins Container
+   If you already created the Jenkins container earlier with:
+
+   bash
+   Copy
+   Edit
+   docker run -d -p 8081:8080 -p 50000:50000 \
+     -v jenkins_home:/var/jenkins_home \
+     -v //var/run/docker.sock:/var/run/docker.sock \
+     --name jenkins jenkins/jenkins:lts
+   Then just start the container again if it's stopped:
+
+   bash
+   Copy
+   Edit
+   docker start jenkins
+   ✅ 3. Access Jenkins UI in Browser
+   Open browser and visit:
+
+   arduino
+   Copy
+   Edit
+   http://localhost:8081
+   ✅ 4. Login to Jenkins
+   If it's the first time, Jenkins will ask for an admin password.
+
+   To get the admin password:
+   bash
+   Copy
+   Edit
+   docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+   Copy that password and paste it in the Jenkins UI.
+
+   After login, install recommended plugins.
+
+   Create your admin user.
+
+   ✅ 5. Open Your Job & Run It
+   Go to: http://localhost:8081
+
+   Click on your pipeline job (e.g., springboot-docker-k8s-ci)
+
+   Click "Build Now" to trigger your CI/CD.
+-----------------
+*****************************************************************************************************************************
+Application run steps for phase-4-k8s-basic-deployment END
+*****************************************************************************************************************************
